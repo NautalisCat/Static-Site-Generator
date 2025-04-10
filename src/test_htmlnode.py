@@ -31,7 +31,14 @@ class TestHtmlNode(unittest.TestCase):
             "HTMLNode(p, What a strange world, children: None, {'class': 'primary'})",
         )
 
-
+class TestLeafNodeP(unittest.TestCase):
+    def test_leaf_to_html_p(self):
+        node = leafnode("p", "Hello, world!")
+        self.assertEqual(node.to_html(), "<p>Hello, world!</p>")
+class TestLeafNodeB(unittest.TestCase):
+    def test_leaf_to_html_p(self):
+        node = leafnode("b", "Hello, world!")
+        self.assertEqual(node.to_html(), "<b>Hello, world!</b>")
 
 
 if __name__ == "__main__":

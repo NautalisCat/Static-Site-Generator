@@ -14,5 +14,10 @@ def main():
     print(htmlnode_string)
     dummy2.__repr__()
 
+    node = TextNode("This is a text node", TextType.TEXT)
+    html_node = text_node_to_html_node(node)
+    print(type(html_node))
+    print(html_node.value)
+
 if __name__ == '__main__':
     main()

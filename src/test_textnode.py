@@ -2,6 +2,7 @@ import unittest
 
 from textnode import *
 from htmlnode import *
+from split_nodes import *
 
 
 class TestTextNode(unittest.TestCase):
@@ -27,6 +28,15 @@ class TestTextNode(unittest.TestCase):
             html_node = text_node_to_html_node(node)
             self.assertEqual(html_node.tag, None)
             self.assertEqual(html_node.value, "This is a text node")
+    def test_TextType(self):
+      node = TextNode("This is text with a `code block` word", TextType.TEXT)
+      new_nodes = split_nodes_delimiter([node], "`", TextType.CODE)
+      self.assertEqual(new_nodes[0].text, "This is text with a ")
+      
+    def test_italic(self):
+      node = TextNode("This is text with an _italic_ block word", TextType.TEXT)
+      new_nodes = split_nodes_delimiter([node], "_", TextType.ITALIC)
+      self.assertEqual(new_nodes[1].text, "italic")
 
 
 if __name__ == "__main__":

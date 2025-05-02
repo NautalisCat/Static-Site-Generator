@@ -28,6 +28,15 @@ def extract_markdown_links(text):
    matches = re.findall(r"(?<!!)\[([^\[\]]*)\]\(([^\(\)]*)\)", text)
    return matches
 
+def extract_title(markdown):
+    lines = markdown.splitlines()
+    for line in lines:
+        if line.startswith("# "):
+            new_line = line[2:].strip()
+            return new_line
+    raise Exception ("Improperly formated Markdown, no h1 found")
+        
+
 def split_nodes_image(old_nodes):
     new_nodes = []
     for old_node in old_nodes:

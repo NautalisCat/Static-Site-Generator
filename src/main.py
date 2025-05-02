@@ -1,16 +1,13 @@
 from textnode import *
 from htmlnode import *
 from copy_static import *
-print("Hello world")
+from generate_page import *
 def main():
-    dummy = TextNode("Help, I've fallen and I can't get up", TextType.CODE, "https://www.youtube.com/watch?v=q9jhpOtubII")
-    dummy.__repr__()
-
-    dict_holder = {
-    "href": "https://www.google.com",
-    "target": "_blank",
-    }
+    print("Hello, this is main!")
+    param1 = "/Users/sleeper/Dev/Static-Site-Generator/content/index.md"
+    param2 = "/Users/sleeper/Dev/Static-Site-Generator/template.html"
+    param3 = "/Users/sleeper/Dev/Static-Site-Generator/content/public/index.html"
     recurs_filecopy(static_directory, public_directory)
-
+    generate_page(param1,param2, param3)
 if __name__ == '__main__':
     main()

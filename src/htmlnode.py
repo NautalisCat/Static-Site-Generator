@@ -1,4 +1,3 @@
-
 class htmlnode:
     def __init__(self, tag=None, value=None, children=None, props=None):
         self.tag = tag
@@ -41,13 +40,12 @@ class ParentNode(htmlnode):
     def to_html(self):
         temp_string = ""
         if self.tag is None:
-            raise ValueError ("No tag")
+            raise ValueError("No tag")
         if self.children is None:
-            raise ValueError ("No children tags")
+            raise ValueError("No children tags")
         for child in self.children:
             temp_string += child.to_html()
-        return f"<{self.tag}>{temp_string}</{self.tag}>"
+        return f"<{self.tag}{self.props_to_html()}>{temp_string}</{self.tag}>"
     
-
-
-        
+    def __repr__(self):
+        return f"ParentNode({self.tag}, {self.value}, {self.props})"

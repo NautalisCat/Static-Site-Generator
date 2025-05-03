@@ -1,23 +1,16 @@
 import os
 import shutil
 
-static_directory = "/Users/sleeper/Dev/Static-Site-Generator/static"
-public_directory = "/Users/sleeper/Dev/Static-Site-Generator/public"
 
-if os.path.exists(public_directory):
-    print("Public folder exist. Will proceed to delete")
-    shutil.rmtree(public_directory)
-os.mkdir(public_directory)
+def copy_files_recursive(source_dir_path, dest_dir_path):
+    if not os.path.exists(dest_dir_path):
+        os.mkdir(dest_dir_path)
 
-def recurs_filecopy(source, destination):
-    file_entries = os.listdir(path=source)
-    print(file_entries)
-    for file in file_entries:
-        source_path = os.path.join(source, file)
-        if os.path.isfile(source_path):
-            shutil.copy(source_path, destination)
-            print(f"Adding {source_path} to Public Directory")
-        elif os.path.isdir(source_path):
-            dest_file_path = os.path.join(destination,file)
-            os.mkdir(dest_file_path)
-            recurs_filecopy(source_path, dest_file_path)
+    for filename in os.listdir(source_dir_path):
+        from_path = os.path.join(source_dir_path, filename)
+        dest_path = os.path.join(dest_dir_path, filename)
+        print(f" * {from_path} -> {dest_path}")
+        if os.path.isfile(from_path):
+            shutil.copy(from_path, dest_path)
+        else:
+            copy_files_recursive(from_path, dest_path)

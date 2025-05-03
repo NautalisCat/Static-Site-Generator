@@ -1,13 +1,26 @@
-from textnode import *
-from htmlnode import *
-from copy_static import *
-from generate_page import *
+import os
+import shutil
+
+from copy_static import copy_files_recursive
+from generate_page import generate_pages_recursive
+
+
+dir_path_static = "./static"
+dir_path_public = "./public"
+dir_path_content = "./content"
+template_path = "./template.html"
+
+
 def main():
-    print("Hello, this is main!")
-    param1 = "/Users/sleeper/Dev/Static-Site-Generator/content/index.md"
-    param2 = "/Users/sleeper/Dev/Static-Site-Generator/template.html"
-    param3 = "/Users/sleeper/Dev/Static-Site-Generator/content/public/index.html"
-    recurs_filecopy(static_directory, public_directory)
-    generate_page(param1,param2, param3)
-if __name__ == '__main__':
-    main()
+    print("Deleting public directory...")
+    if os.path.exists(dir_path_public):
+        shutil.rmtree(dir_path_public)
+
+    print("Copying static files to public directory...")
+    copy_files_recursive(dir_path_static, dir_path_public)
+
+    print("Generating content...")
+    generate_pages_recursive(dir_path_content, template_path, dir_path_public)
+
+
+main()

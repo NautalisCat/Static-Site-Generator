@@ -1,32 +1,56 @@
-from split_nodes import extract_title
-from markdown_blocks import *
+import os
+from pathlib import Path
+from markdown_blocks import markdown_to_html_node
+
+
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+    for filename in os.listdir(dir_path_content):
+        from_path = os.path.join(dir_path_content, filename)
+        dest_path = os.path.join(dest_dir_path, filename)
+        
+        # Skip any public directories to avoid recursion into output
+        if filename == "public":
+            continue
+            
+        if os.path.isfile(from_path):
+            # Only process markdown files
+            if from_path.endswith(".md"):
+                dest_path = Path(dest_path).with_suffix(".html")
+                generate_page(from_path, template_path, dest_path)
+        else:
+            # Create directory if it doesn't exist
+            os.makedirs(dest_path, exist_ok=True)
+            generate_pages_recursive(from_path, template_path, dest_path)
+
+
 
 def generate_page(from_path, template_path, dest_path):
-    print(f"Generating page from {from_path} to {dest_path} using {template_path}")
-    
-    # Read files
-    from_file = open(from_path, 'r')
-    from_template = open(template_path, 'r')
-    read_from_file = from_file.read()
-    read_from_template = from_template.read()
-    
-    # Extract title and convert markdown to HTML
-    title = extract_title(read_from_file)
-    markdown_node = markdown_to_html_node(read_from_file)
-    html_string = markdown_node.to_html()
-    
-    # Replace placeholders in template
-    final_html = read_from_template.replace("{{ Title }}", title).replace("{{ Content }}", html_string)
-    
-    # Ensure destination directory exists
-    import os
-    os.makedirs(os.path.dirname(dest_path), exist_ok=True)
-    
-    # Write to destination file
-    with open(dest_path, 'w') as dest_file:
-        dest_file.write(final_html)
-    
-    # Close original file handles
+    print(f" * {from_path} {template_path} -> {dest_path}")
+    from_file = open(from_path, "r")
+    markdown_content = from_file.read()
     from_file.close()
-    from_template.close()
 
+    template_file = open(template_path, "r")
+    template = template_file.read()
+    template_file.close()
+
+    node = markdown_to_html_node(markdown_content)
+    html = node.to_html()
+
+    title = extract_title(markdown_content)
+    template = template.replace("{{ Title }}", title)
+    template = template.replace("{{ Content }}", html)
+
+    dest_dir_path = os.path.dirname(dest_path)
+    if dest_dir_path != "":
+        os.makedirs(dest_dir_path, exist_ok=True)
+    to_file = open(dest_path, "w")
+    to_file.write(template)
+
+
+def extract_title(md):
+    lines = md.split("\n")
+    for line in lines:
+        if line.startswith("# "):
+            return line[2:]
+    raise ValueError("no title found")
